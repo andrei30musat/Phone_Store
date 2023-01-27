@@ -28,29 +28,26 @@ bool isNumber(string s)//functie cu care verific daca un string e int
 class Telefon : public IO_Interface {
 protected:
     string nume;
-    int numar;//numar de telefon
+    const int ID;
+    static int contorID;
 public:
-    Telefon() {
+    Telefon() : ID(contorID++) {
         this->nume = "";
-        this->numar = 0;
     }
 
-    Telefon(string nume, int numar) {
+    Telefon(string nume): ID(contorID) {
         this->nume = nume;
-        this->numar = numar;
     }
 
-    Telefon(const Telefon &t) {
-
+    Telefon(const Telefon &t): ID(contorID) {
         this->nume = t.nume;
-        this->numar = t.numar;
     }
 
     Telefon &operator=(const Telefon &t) {
 
         if (this != &t) {
             this->nume = t.nume;
-            this->numar = t.numar;
+
         }
         return *this;
     }
@@ -69,30 +66,13 @@ public:
                 cout << "\n Introdu un nume valid: ";
             }
         }
-        cout << "Numarul dvs de telefon fara prefix: ";
-
-        while (true) {
-            try {
-                in >> this->numar;
-                int s;
-                if ((this->numar / 100000000) == 0 || (this->numar / 100000000) > 9)
-                    throw s;
-
-                break;
-            }
-            catch (int s) {
-                cout << "\n Numarul de telefon introdus este invalid. ";
-                cout << "\n Introdu un nr de telefon valid: ";
-            }
-        }
         return in;
     }
 
     virtual ostream &Afisare(ostream &out) const {
         out << "\n Numele telefonului este: ";
         out << this->nume;
-        out << "\n Numarul dvs de telefon este : +40";
-        out << this->numar;
+        out<<"\n ID telefonului este: "<<this->ID;
         return out;
     }
 
@@ -112,13 +92,14 @@ public:
 
         throw runtime_error("Accesati o zona de memorie nula");
     }
-
+    int getID() const{
+        return this->ID;
+    }
     virtual ~Telefon() {
         this->nume = "";
-        this->numar = 0;
     }
 };
-
+int Telefon :: contorID  = 1000;
 class Mobil : public virtual Telefon {
 protected:
     int camera;
@@ -129,7 +110,7 @@ public:
         this->baterie = 0;
     }
 
-    Mobil(string nume, int numar, int camera, int baterie) : Telefon(nume, numar) {
+    Mobil(string nume, int camera, int baterie) : Telefon(nume) {
         this->camera = camera;
         this->baterie = baterie;
     }
@@ -201,7 +182,9 @@ public:
 
         throw runtime_error("Accesati o zona de memorie nula");
     }
-
+    int calculeazaAutonomie(){///autonomia telefonului
+        return this->baterie/280;
+    }
     virtual ~Mobil() {
         this->camera = 0;
         this->baterie = 0;
@@ -217,8 +200,8 @@ public:
         this->protectie = 0;
     }
 
-    Smartphone(string nume, int numar, int camera, int baterie, int protectie) : Telefon(nume, numar),
-                                                                                 Mobil(nume, numar, camera, baterie) {
+    Smartphone(string nume, int camera, int baterie, int protectie) : Telefon(nume),
+                                                                      Mobil(nume, camera, baterie) {
 
         this->protectie = protectie;
     }
@@ -380,6 +363,13 @@ public:
 template<typename T>
 T Max(T x, T y) {
     return (x > y) ? x : y;
+}
+template<typename T>
+int Max(T x, string y){
+    int l=y.size();
+    if(l>x)
+        return 1;
+    return 0;
 }
 
 template<typename T>
@@ -579,15 +569,22 @@ public:
                             break;
                         }
                         case 5: {
-                            if (listaTelefoane.empty())
-                                throw runtime_error("Accesati o zona de memorie nula");
-                            else {
+                            try{
+                                if (listaTelefoane.empty())
+                                    throw runtime_error("Accesati o zona de memorie nula");
+
                                 cout << "\n Lista cu toate telefoanele: " << endl;
                                 for (int i = 0; i < listaTelefoane.size(); i++) {
                                     cout << *listaTelefoane[i] << endl;
+                                    if(dynamic_cast<Mobil*>(listaTelefoane[i]))
+                                        cout<<"Autonomia telefonului este de: "<<dynamic_cast<Mobil*>(listaTelefoane[i])->calculeazaAutonomie()<<" de ore."<<endl;
                                     cout << "Anul aparitiei telefonului este: " << *listaAn[i] << endl;
                                     cout << "Pretul telefonului este: " << *listaPret[i] << endl;
                                 }
+                            }
+                            catch (...)
+                            {
+                                cout<<"Trebuie sa introduceti date ca sa le afisati.";
                             }
                             break;
                         }
@@ -599,11 +596,18 @@ public:
                                     cin >> name;
                                     if (isNumber(name.getX()))
                                         throw string("\n Input-ul este invalid. ");
+
+                                    if(Max(3,name.getX())==0)//vreau ca numele sa aiba o lungime minima
+                                        throw runtime_error("\n");
                                     break;
                                 }
                                 catch (string s) {
                                     cout << s;
                                     cout << "\n Nume tableta: ";
+                                }
+                                catch(...){
+                                    cout<<"\n Numele este prea scurt";
+                                    cout<<"\n Introdu alt nume: ";
                                 }
                             }
                             listaNume.emplace(++i, new Base<string>(name));
@@ -613,11 +617,11 @@ public:
                             listaTablete.emplace(++j, new Tableta(t));
                             break;
                         };
-
                         case 7: {
-                            if (listaTablete.empty())
-                                throw runtime_error("Accesati o zona de memorie nula");
-                            else {
+                            try{
+                                if (listaTablete.empty())
+                                    throw runtime_error("Accesati o zona de memorie nula");
+
                                 cout << "Tabletele sunt: " << endl;
                                 map<int, Tableta *>::iterator it;
                                 map<int, Base<string> *>::iterator it2;
@@ -626,6 +630,10 @@ public:
                                     cout << "Nume tableta: " << *it2->second;
                                     cout << *it->second << endl;
                                 }
+                            }
+                            catch (...)
+                            {
+                                cout<<"Trebuie sa introduceti date ca sa le afisati.";
                             }
                             break;
                         };
@@ -702,28 +710,40 @@ public:
                             break;
                         }
                         case 10: {
-                            if (listaMobile.empty())
-                                throw runtime_error("Accesati o zona de memorie nula");
-                            else {
+                            try{
+                                if (listaMobile.empty())
+                                    throw runtime_error("Accesati o zona de memorie nula");
+
                                 cout << "\n Lista cu toate telefoanele mobile : " << endl;
                                 set<Mobil *>::iterator itr;
                                 for (itr = listaMobile.begin(); itr != listaMobile.end(); itr++)
                                     cout << **itr << endl;
                             }
+                            catch (...)
+                            {
+                                cout<<"Trebuie sa introduceti date ca sa le afisati.";
+                            }
                             break;
                         }
                         case 11: {
-                            for (int i = 0; i < listaTelefoane.size(); i++)
-                                if (Smartphone *m = dynamic_cast<Smartphone *>(listaTelefoane[i]))
+                            listaSmartphone.clear();
+                            for (int i = 0; i < listaTelefoane.size(); i++) {
+                                Smartphone *m = dynamic_cast<Smartphone *>(listaTelefoane[i]);
+                                if (m!= nullptr)
                                     listaSmartphone.push_back(new Smartphone(*m));
+                            }
+                            try{
+                                if (listaSmartphone.empty())
+                                    throw runtime_error("Accesati o zona de memorie nula");
 
-                            if (listaSmartphone.empty())
-                                throw runtime_error("Accesati o zona de memorie nula");
-                            else {
                                 cout << "\n Lista cu toate Smartphone-uri: " << endl;
                                 list<Smartphone *>::iterator itr;
                                 for (itr = listaSmartphone.begin(); itr != listaSmartphone.end(); itr++)
                                     cout << **itr << endl;
+                            }
+                            catch (...)
+                            {
+                                cout<<"Trebuie sa introduceti date ca sa le afisati.";
                             }
                             break;
                         }
