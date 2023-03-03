@@ -16,7 +16,7 @@ public:
     virtual ostream &Afisare(ostream &out) const = 0;
 };
 
-bool isNumber(string s)//functie cu care verific daca un string e int
+bool isNumber(string s)//functie cu care verific daca un string e un numar
 {
     for (int i = 0; i < s.size(); i++)
         if (isdigit(s[i]) == 0)
