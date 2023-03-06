@@ -133,7 +133,7 @@ public:
 
     istream &Citire(istream &in) {
         Telefon::Citire(in);
-        cout << "Camera principala a telefonului: ";
+        cout << "Camera principala a telefonului[MP]: ";
         while (true) {
             try {
                 in >> this->camera;
@@ -146,7 +146,7 @@ public:
                 cout << "\n Camera principala a telefonului: ";
             }
         }
-        cout << "Capacitatea bateriei telefonului: ";
+        cout << "Capacitatea bateriei telefonului[mAh]: ";
         while (true) {
             try {
                 in >> this->baterie;
@@ -223,7 +223,7 @@ public:
 
     istream &Citire(istream &in) {
         Mobil::Citire(in);
-        cout << "Care este protectia telefonului?(IP)";
+        cout << "Protectia telefonului la praf si apa?(IP)";
         while (true) {
             try {
                 bool s;
@@ -234,7 +234,7 @@ public:
             }
             catch (bool s) {
                 cout << "\n Input-ul introdus este invalid. ";
-                cout << "\n Care este protectia telefonului?(IP)";
+                cout << "\n Protectia telefonului?(IP)";
             }
         }
         return in;
