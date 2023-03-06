@@ -53,7 +53,7 @@ public:
     }
 
     virtual istream &Citire(istream &in) {
-        cout << "Numele telefonului: ";
+        cout << "Brand-ul telefonului: ";
         while (true) {
             try {
                 in >> this->nume;
@@ -70,7 +70,7 @@ public:
     }
 
     virtual ostream &Afisare(ostream &out) const {
-        out << "\n Numele telefonului este: ";
+        out << "\n Brand-ul telefonului este: ";
         out << this->nume;
         out<<"\n ID telefonului este: "<<this->ID;
         return out;
@@ -590,7 +590,7 @@ public:
                         }
                         case 6: {
                             Base<string> name;
-                            cout << "Nume tableta: ";
+                            cout << "Brand-ul tabletei: ";
                             while (true) {
                                 try {
                                     cin >> name;
@@ -627,7 +627,7 @@ public:
                                 map<int, Base<string> *>::iterator it2;
                                 for (it = listaTablete.begin(), it2 = listaNume.begin();
                                      it != listaTablete.end(); it++, it2++) {
-                                    cout << "Nume tableta: " << *it2->second;
+                                    cout << "Brand tableta: " << *it2->second;
                                     cout << *it->second << endl;
                                 }
                             }
@@ -675,7 +675,7 @@ public:
                             }
 
                             string name;
-                            cout << "Nume tableta: ";
+                            cout << "Brand tableta: ";
                             while (true) {
                                 try {
                                     cin >> name;
@@ -685,7 +685,7 @@ public:
                                 }
                                 catch (string s) {
                                     cout << s;
-                                    cout << "\n Nume tableta: ";
+                                    cout << "\n Brand tableta: ";
                                 }
                             }
 
