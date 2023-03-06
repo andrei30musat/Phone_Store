@@ -1,3 +1,0 @@
-D:/CLionProjects/Phone_Store/cmake-build-debug/CMakeFiles/POO3.dir
-D:/CLionProjects/Phone_Store/cmake-build-debug/CMakeFiles/edit_cache.dir
-D:/CLionProjects/Phone_Store/cmake-build-debug/CMakeFiles/rebuild_cache.dir
